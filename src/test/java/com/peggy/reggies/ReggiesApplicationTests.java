@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@EnableTransactionManagement
+>>>>>>> 1f273fc... 菜品套餐分类管理部分完成
 class ReggiesApplicationTests {
 
     @Autowired

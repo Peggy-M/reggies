@@ -59,7 +59,12 @@ public class LoginCheckFilter implements Filter {
                 "/employee/login",   //登录
                 "/employee/logout",  //注销
                 "/backend/**",       //静态资源目录
+<<<<<<< HEAD
                 "/front/**"          //静态资源目录
+=======
+                "/front/**",          //静态资源目录
+                "/common/**",
+>>>>>>> 1f273fc... 菜品套餐分类管理部分完成
         };
 
         //判断本次请求是否需要处理
