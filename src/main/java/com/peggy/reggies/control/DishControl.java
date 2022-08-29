@@ -37,14 +37,32 @@ public class DishControl {
     @GetMapping("/page")
     public R<Page> page(Integer page,Integer pageSize,String name){
         Page pageInfo = new Page(page, pageSize);
+        Page dishDtoPage=new Page();
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.like(StringUtils.isNotEmpty(name),Dish::getName,name);
         queryWrapper.orderByDesc(Dish::getUpdateTime);
         dishService.page(pageInfo,queryWrapper);
+        //对象拷贝
+        BeanUtils.copyProperties(pageInfo,dishDtoPage,"records");
 
+        //获取原records数据
+        List<Dish> records = pageInfo.getRecords();
 
-        return R.success(pageInfo);
+        List<DishDto> list = records.stream().map((item) -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item,dishDto);
+            Long categoryId = item.getCategoryId();  //分类id
+            Category category = categoryService.getById(categoryId);
+            String categoryName = category.getName();
+            dishDto.setCategoryName(categoryName);
+            return dishDto;
+        }).collect(Collectors.toList());
+
+        dishDtoPage.setRecords(list);
+
+        return R.success(dishDtoPage);
     }
+
 
     //添加菜品
     @PostMapping
