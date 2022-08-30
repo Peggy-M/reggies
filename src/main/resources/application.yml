@@ -21,4 +21,4 @@ mybatis-plus:
       id-type: ASSIGN_ID
 
 reggies:
-  path: D:\image
+  path: /root/image
