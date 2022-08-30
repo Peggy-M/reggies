@@ -36,8 +36,8 @@ public class DishControl {
     //列表
     @GetMapping("/page")
     public R<Page> page(Integer page,Integer pageSize,String name){
-        Page pageInfo = new Page(page, pageSize);
-        Page dishDtoPage=new Page();
+        Page<Dish> pageInfo = new Page(page, pageSize);
+        Page<DishDto> dishDtoPage=new Page();
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper();
         queryWrapper.like(StringUtils.isNotEmpty(name),Dish::getName,name);
         queryWrapper.orderByDesc(Dish::getUpdateTime);
@@ -127,4 +127,19 @@ public class DishControl {
         dishFalvorService.remove(dishFlavorQueryWrapper);
         return R.success("菜品删除成功");
     }
+
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish){
+
+        //构造查询条件
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        //添加条件，查询状态为1（1为起售，0为停售）的菜品
+        queryWrapper.eq(Dish::getStatus,1);
+
+        List<Dish> list = dishService.list(queryWrapper);
+        //添加排序条件
+        return R.success(list);
+    }
+
 }
